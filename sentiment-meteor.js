@@ -1,20 +1,28 @@
 
 
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
-
   Template.contentURL.helpers({
-    counter: function () {
-      return Session.get('counter');
-    }
+//    counter: function () {
+//      return Session.get('counter');
+//    }
   });
 
   Template.contentURL.events({
-    'change input': function () {
-      // increment the counter when button is clicked
-      console.log('hi')
-      Session.set('counter', Session.get('counter') + 1);
+    'change input': function (e, tmpl) {
+
+      var contentPath = e.target.value;
+      var content = {};
+
+
+      var capi_base = "http://content.guardianapis.com";
+      var capi_key = "api-key=gnm-hackday";
+      var capi_fields= "show-fields=body,shortUrl";
+
+      var requestUrl = capi_base + contentPath + "?" + capi_key + "&" + capi_fields;
+
+      $.get(requestUrl, function (response) {
+       content = response.response.content.fields;
+      });
     }
   });
 }
