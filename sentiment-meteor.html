@@ -17,6 +17,7 @@
 
 <body>
   {{> contentURL}}
+
 </body>
 
 <template name="contentURL">
@@ -24,24 +25,20 @@
         <div class="row">
             <div class="col-md-12">
                 <input id="myURL" class="form-control input-lg" type="text" placeholder="Content Path">
+                <button id="submit">test</button>
             </div>
         </div>
     </div>
-
-
     <div class="container" style="margin-top: 100px">
-        <div class="row">
-            <div class="col-md-6" id="Content">
-
-            </div>
-            <div class="col-md-6" id="Sentiment">
-
-            </div>
+    <div class="row">
+        <div class="col-md-6" id="Content">
+            {{{articleBody}}}
+        </div>
+        <div class="col-md-6" id="Comments">
+            {{{comments}}}
         </div>
     </div>
-
+</div>
 </template>
-
-
 
 
