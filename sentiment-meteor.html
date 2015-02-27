@@ -12,7 +12,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-    <!--<script src="/analyser.js" type="text/javascript"></script>-->
+    <script src="/semantria/SemantriaJavaScriptSDK.js" type="text/javascript"></script>
+    <!--<script src="/semantria.js" type="text/javascript"></script>-->
+
 </head>
 
 <body>
@@ -24,21 +26,103 @@
     <div class="container" style="margin-top: 50px">
         <div class="row">
             <div class="col-md-12">
-                <input id="myURL" class="form-control input-lg" type="text" placeholder="Content Path">
-                <button id="submit">test</button>
+                <input id="myURL" class="form-control input-lg" type="text" placeholder="Content Path"><br/>
+                <button id="submit" class="btn btn-primary">Test!</button>
             </div>
         </div>
     </div>
-    <div class="container" style="margin-top: 100px">
+    <div class="container" style="margin-top: 10px">
     <div class="row">
-        <div class="col-md-6" id="Content">
-            {{{articleBody}}}
+        <div class="col-md-6" id="Themes">
+            <b>Content Sentiment</b><br/>
+            <i>Themes</i><br/>
+            <table class="table"><tbody>
+            {{#each articleThemes}}
+                <tr>
+                    <td>{{title}} - {{sentiment_score}} {{sentiment_polarity}}
+                    </td>
+                </tr>
+            {{/each}}
+            </tbody>
+                </table>
+            <br/>
+            <i>Entities</i><br/>
+            <table class="table"><tbody>
+                {{#each articleThemesEntities}}
+                <tr>
+                    <td>{{title}} - {{label}}<br/>
+                   <span class="label label-danger">{{negative_count}}</span>
+                    <span class="label label-default">{{neutral_count}}</span>
+                    <span class="label label-success">{{positive_count}}</span>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            </table>
+            <br/>
+            <i>Facets</i><br/>
+            <table class="table"><tbody>
+                {{#each articleThemesFacets}}
+                <tr>
+                    <td>
+                        {{label}}
+                    <span class="label label-danger">{{negative_count}}</span>
+                    <span class="label label-default">{{neutral_count}}</span>
+                    <span class="label label-success">{{positive_count}}</span>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            </table>
+
         </div>
-        <div class="col-md-6" id="Comments">
-            {{{comments}}}
+        <div class="col-md-6" id="CommentThemes">
+            <b>Discussion Sentiment</b><br/>
+            <i>Themes</i><br/>
+            <table class="table"><tbody>
+                {{#each commentThemes}}
+                <tr>
+                    <td>{{title}} - {{sentiment_score}} {{sentiment_polarity}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+            </table>
+            <br/>
+            <i>Entities</i><br/>
+            <table class="table"><tbody>
+                {{#each commentThemesEntities}}
+                <tr><td>{{title}} - {{label}}<br/>
+                    <span class="label label-danger">{{negative_count}}</span>
+                    <span class="label label-default">{{neutral_count}}</span>
+                    <span class="label label-success">{{positive_count}}</span>
+                    </td>
+                    </tr>
+                {{/each}}</tbody>
+                    </table><br/>
+            <i>Facets</i><br/>
+            <table class="table"><tbody>
+                {{#each commentThemesFacets}}
+                <tr><td>{{label}}
+                    <span class="label label-danger">{{negative_count}}</span>
+                    <span class="label label-default">{{neutral_count}}</span>
+                    <span class="label label-success">{{positive_count}}</span>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+            </table>
         </div>
     </div>
-</div>
+    </div>
+    <div class="container" style="margin-top: 50px">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{articleHeadline}}</h2><br/>
+                {{{articleBody}}}
+            </div>
+        </div>
+    </div>
+
 </template>
 
 

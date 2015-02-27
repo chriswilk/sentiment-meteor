@@ -1,4 +1,4 @@
-var XMLHttpRequest = Meteor.npmRequire("xmlhttprequest").XMLHttpRequest;
+//var XMLHttpRequest = Meteor.npmRequire("xmlhttprequest").XMLHttpRequest;
 ;(function() {
 	/**
 	 * @var {Function} emptyFn
