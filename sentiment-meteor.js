@@ -77,12 +77,7 @@ function sendData(collectionId, data) {
   }
 };
 
-function getThemes(data, category) {
-  var collectionId = (new Date).getTime();
-  sendData(category + ":" + collectionId, data);
-
-  setTimeout(function () {
-
+function pollSemantra() {
     var results = session.getProcessedCollections();
     for (var i = 0; i < results.length; i++) {
       var x = results[i]["id"].substring(0, results[i]["id"].indexOf(":"));
@@ -93,9 +88,14 @@ function getThemes(data, category) {
       Session.set(x + "-facets", results[i]["facets"]);
     }
     return null;
-  }, 10000);
+}
+function getThemes(data, category) {
+  var collectionId = (new Date).getTime();
+  sendData(category + ":" + collectionId, data);
 
-
+  for (var i = 0; i < 20; i ++) {
+    setTimeout(pollSemantra, i * 500);
+  }
 
 };
 
@@ -120,7 +120,7 @@ if (Meteor.isClient) {
          return Session.get('article-themes-entities');
       },
      articleThemesFacets: function () {
-          return Session.get('comment-themes-facets');
+          return Session.get('article-themes-facets');
        },
      commentThemes: function () {
          return Session.get('comment-themes');
