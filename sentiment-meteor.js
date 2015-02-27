@@ -1,5 +1,12 @@
 ///world/2015/feb/27/david-haines-widow-dragana-mohammed-emwazi-isis-jihadi-john
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 var getDiscussions = function (discussionId) {
     var url = "http://discussion.guardianapis.com/discussion-api/discussion/" + discussionId;
 
@@ -68,6 +75,11 @@ function sendData(collectionId, data) {
     documents: data
   });
 
+//  var result = session.queueDocument({
+//    id: collectionId,
+//    text: data.join(" ")
+//  });
+
   if(result == 202) {
     console.log("Success")
     return true
@@ -77,15 +89,67 @@ function sendData(collectionId, data) {
   }
 };
 
+function calculateTotals (themes, data, category) {
+    var seedTotalCount = {
+        positive: 0,
+        neutral: 0,
+        negative: 0
+      };
+
+      var total = 0;
+
+      data.forEach(function (x) {
+        seedTotalCount.positive += x.positive_count;
+        seedTotalCount.neutral += x.neutral_count;
+        seedTotalCount.negative += x.negative_count;
+
+        //total += x.positive_count + x.neutral_count + x.negative_count;
+      });
+
+      var theme_negative = 0;
+      var theme_positive = 0;
+
+      themes.forEach(function (x) {
+        if (x.sentiment_score > 0) {
+            theme_positive += x.sentiment_score
+        } else {
+            theme_negative -= x.sentiment_score
+        }
+      });
+
+      console.log(theme_positive)
+      console.log(theme_negative)
+
+      seedTotalCount.positive += (10 * theme_positive);
+      seedTotalCount.negative += (10 * theme_negative);
+
+      total = seedTotalCount.positive + seedTotalCount.neutral + seedTotalCount.negative
+
+
+    var seedTotal = {
+        positive: (seedTotalCount.positive / total) * 100,
+        neutral: (seedTotalCount.neutral / total) * 100,
+        negative: (seedTotalCount.negative / total) * 100
+    };
+
+    console.log(seedTotal)
+    Session.set(category + "-totals", seedTotal);
+    console.log(category + "-totals");
+    console.log(seedTotal);
+
+}
+
 function pollSemantra() {
     var results = session.getProcessedCollections();
+//    var results = session.getProcessedDocuments();
     for (var i = 0; i < results.length; i++) {
       var x = results[i]["id"].substring(0, results[i]["id"].indexOf(":"));
       console.log("Received " + results[i]["id"] + " (" + x + ")")
-      console.log(results[i]["themes"])
+      console.log(results)
       Session.set(x, results[i]["themes"]);
       Session.set(x + "-entities", results[i]["entities"]);
       Session.set(x + "-facets", results[i]["facets"]);
+      calculateTotals(results[i]["themes"], results[i]["entities"], x);
     }
     return null;
 }
@@ -96,10 +160,17 @@ function getThemes(data, category) {
   for (var i = 0; i < 20; i ++) {
     setTimeout(pollSemantra, i * 500);
   }
-
 };
 
 if (Meteor.isClient) {
+    Meteor.startup(function () {
+       var url = getParameterByName('url');
+        url = url.replace('http://www.theguardian.com', '');
+        console.log(url)
+        makeCall(url);
+
+      });
+
   Template.contentURL.helpers({
     articleBody: function () {
       return Session.get('article').body;
@@ -130,8 +201,28 @@ if (Meteor.isClient) {
      },
     commentThemesFacets: function () {
         return Session.get('comment-themes-facets');
-     }
+     },
+     article_positive_percent: function () {
+        return Session.get('article-themes-totals').positive;
+     },
 
+    article_neutral_percent: function () {
+        return Session.get('article-themes-totals').neutral;
+    },
+    article_negative_percent: function () {
+        return Session.get('article-themes-totals').negative;
+    },
+
+    discussion_positive_percent: function () {
+        return Session.get('comment-themes-totals').positive;
+     },
+
+    discussion_neutral_percent: function () {
+        return Session.get('comment-themes-totals').neutral;
+    },
+    discussion_negative_percent: function () {
+        return Session.get('comment-themes-totals').negative;
+    }
   });
 
   Template.contentURL.events({

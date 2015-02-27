@@ -27,16 +27,28 @@
         <div class="row">
             <div class="col-md-12">
                 <input id="myURL" class="form-control input-lg" type="text" placeholder="Content Path"><br/>
-                <button id="submit" class="btn btn-primary">Test!</button>
+                <button id="submit" class="btn btn-primary hidden">Test!</button>
             </div>
         </div>
     </div>
     <div class="container" style="margin-top: 10px">
     <div class="row">
+        <h2>Results</h2>
         <div class="col-md-6" id="Themes">
-            <b>Content Sentiment</b><br/>
-            <i>Themes</i><br/>
-            <table class="table"><tbody>
+            <h3>Content</h3>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" style="width: {{article_positive_percent}}%">
+                    <span class="sr-only">{{article_positive_percent}}% Complete (success)</span>
+                </div>
+                <div class="progress-bar progress-bar-warning" style="width: {{article_neutral_percent}}%">
+                    <span class="sr-only">{{article_neutral_percent}}% Complete (warning)</span>
+                </div>
+                <div class="progress-bar progress-bar-danger" style="width: {{article_negative_percent}}%">
+                    <span class="sr-only">{{article_negative_percent}}% Complete (danger)</span>
+                </div>
+            </div>
+            <table class="table">
+                <thead><tr><th>Themes</th></tr></thead><tbody>
             {{#each articleThemes}}
                 <tr>
                     <td>{{title}} - {{sentiment_score}} {{sentiment_polarity}}
@@ -46,8 +58,8 @@
             </tbody>
                 </table>
             <br/>
-            <i>Entities</i><br/>
-            <table class="table"><tbody>
+            <table class="table">
+                <thead><tr><th>Entities</th></tr></thead><tbody>
                 {{#each articleThemesEntities}}
                 <tr>
                     <td>{{title}} - {{label}}<br/>
@@ -60,8 +72,8 @@
             </tbody>
             </table>
             <br/>
-            <i>Facets</i><br/>
-            <table class="table"><tbody>
+            <table class="table">
+                <thead><tr><th>Facets</th></tr></thead><tbody>
                 {{#each articleThemesFacets}}
                 <tr>
                     <td>
@@ -77,9 +89,20 @@
 
         </div>
         <div class="col-md-6" id="CommentThemes">
-            <b>Discussion Sentiment</b><br/>
-            <i>Themes</i><br/>
-            <table class="table"><tbody>
+            <h3>Discussion</h3>
+            <div class="progress">
+                <div class="progress-bar progress-bar-success" style="width: {{discussion_positive_percent}}%">
+                    <span class="sr-only">{{discussion_positive_percent}}% Complete (success)</span>
+                </div>
+                <div class="progress-bar progress-bar-warning" style="width: {{discussion_neutral_percent}}%">
+                    <span class="sr-only">{{discussion_neutral_percent}}% Complete (warning)</span>
+                </div>
+                <div class="progress-bar progress-bar-danger" style="width: {{discussion_negative_percent}}%">
+                    <span class="sr-only">{{discussion_negative_percent}}% Complete (danger)</span>
+                </div>
+            </div>
+            <table class="table">
+                <thead><tr><th>Themes</th></tr></thead><tbody>
                 {{#each commentThemes}}
                 <tr>
                     <td>{{title}} - {{sentiment_score}} {{sentiment_polarity}}</td>
@@ -88,8 +111,8 @@
             </tbody>
             </table>
             <br/>
-            <i>Entities</i><br/>
-            <table class="table"><tbody>
+            <table class="table">
+                <thead><tr><th>Entities</th></tr></thead><tbody>
                 {{#each commentThemesEntities}}
                 <tr><td>{{title}} - {{label}}<br/>
                     <span class="label label-danger">{{negative_count}}</span>
@@ -99,8 +122,8 @@
                     </tr>
                 {{/each}}</tbody>
                     </table><br/>
-            <i>Facets</i><br/>
-            <table class="table"><tbody>
+            <table class="table">
+                <thead><tr><th>Facets</th></tr></thead><tbody>
                 {{#each commentThemesFacets}}
                 <tr><td>{{label}}
                     <span class="label label-danger">{{negative_count}}</span>
